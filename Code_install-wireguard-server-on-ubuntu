@@ -1,35 +1,109 @@
-###
-# Replace :
-# 	- Range Address
-#	- ListenPort
-#	- PrivateKey
-#	- Network Interface Name
+step 1.1: update system
 
-private key=
-
-public key =
+	apt update && apt upgrade -y
 	
+step 1.2: install iptables,vim,net-tools
+
+	apt install iptables net-tools vim -y
+	
+step 1.3: Enable ip forwarding to route packets between vpn clients and the internet
+
+	vim /etc/sysctl.conf
+	
+step 1.4: check network interface name and ip of the system
+
+	ifconfig
+	
+step 2:install wireguard vpn server on the system
+
+	apt install wireguard -y
+	
+step 3:configure wireguard server
+
+step 3.1:go to /etc/wireguard directory
+
+	cd /etc/wireguard/
+	
+step 3.2: create a private and public key pair for the wireguard server
 
 	wg genkey | tee privatekey | wg pubkey > publickey
+	
+step 3.3:show private and public key and copy them
 
-[Interface]
-## Address : A private IP address for wg0 interface.
-Address = 192.168.20.1/24
+	cat privatekey
+	
+	cat publickey
+	
+	private key=
+	
+        public key =
+	
+step 3.4:create a new config file called wg0.conf
+
+	touch wg0.conf
+	
+step 3.5: open wg0.conf and add new content
+
+
+	[Interface]
+	
+	## Address : A private IP address for wg0 interface.
+	
+	Address = 192.168.20.1/24
  
-## Specify the listening port of WireGuard, I like port 88888, you can change it.
-ListenPort = 88888
+	## Specify the listening port of WireGuard, I like port 88888, you can change it.
+	
+	ListenPort = 88888
  
-## A privatekey of the server ( cat /etc/wireguard/privatekey)
-PrivateKey = PrivateKey_of_the_Server
+	## A privatekey of the server ( cat /etc/wireguard/privatekey)
+	
+	PrivateKey = PrivateKey_of_the_Server
 
-## The PostUp will run when the WireGuard Server starts the virtual VPN tunnel.
-## The PostDown rules run when the WireGuard Server stops the virtual VPN tunnel.
-## Specify the command that allows traffic to leave the server and give the VPN clients access to the Internet. 
+	## The PostUp will run when the WireGuard Server starts the virtual VPN tunnel.
+	
+	## The PostDown rules run when the WireGuard Server stops the virtual VPN tunnel.
+	
+	## Specify the command that allows traffic to leave the server and give the VPN clients access to the Internet. 
 
-PostUp = iptables -A FORWARD -i wg0 -j ACCEPT
+	PostUp = iptables -A FORWARD -i wg0 -j ACCEPT
 
-PostUp = iptables -t nat -A POSTROUTING -o YOUR_Network_Interface_Name -j MASQUERADE
+	PostUp = iptables -t nat -A POSTROUTING -o YOUR_Network_Interface_Name -j MASQUERADE
 
-PostDown = iptables -D FORWARD -i wg0 -j ACCEPT
+	PostDown = iptables -D FORWARD -i wg0 -j ACCEPT
 
-PostDown = iptables -t nat -D POSTROUTING -o YOUR_Network_Interface_Name -j MASQUERAD
+	PostDown = iptables -t nat -D POSTROUTING -o YOUR_Network_Interface_Name -j MASQUERAD
+	
+step 3.6:change permission on the privatekey and wg0.cong file
+
+	chmode 600 privatekey
+	
+	chmode 600 wg0.conf
+	
+step 3.7:start and enble wireguard server
+
+	systemctl start wg-quick@wg0
+	
+	systemctl Enable wg-quick@wg0
+	
+step 3.8:make sure wireguard vpn server is running
+
+	systemctl status wg-quick@wg0
+	
+step 3.9:verify interface named wg0 is up
+
+	wg
+	
+step 3.10: check status of the ufw firewall
+
+	ufw status
+	
+step 3.11: allow port
+
+	ufw allow 88888/udp
+	
+step 3.12: reload ufw firewall
+
+	ufw reload
+	
+	
+	
