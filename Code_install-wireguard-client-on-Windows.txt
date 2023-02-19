@@ -1,0 +1,40 @@
+step 1:Download and install wireguard client for windows
+
+
+step 2: configure wireguard client on windows
+
+
+step 2.1: Add new content
+
+################################
+
+[Interface]
+Address = Range_IP_VPN
+
+[Peer]
+###Public of the WireGuard VPN Server
+PublicKey = Public_key_of_the_WireGuard_Server
+
+### IP and Port of the WireGuard VPN Server
+Endpoint = IP_of_the_WireGuard_Server:Port_VPN_of_the_Server
+
+### Allow all traffic
+AllowedIPs = 0.0.0.0/0
+
+#################################
+
+step 3:Add client on wireguard server
+
+
+wg set wg0 peer public_key_client allowed-ips ip_client
+
+
+step 3.1:verify
+
+wg
+
+step 3.2: save config file
+
+wg-quick save wg0
+
+step 3.3:Testing
