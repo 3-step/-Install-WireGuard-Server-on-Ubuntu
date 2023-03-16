@@ -100,7 +100,7 @@ step 3.10: check status of the ufw firewall
 	
 step 3.11: allow port
 
-	ufw allow 88888/udp
+	ufw allow 8888/udp
 	
 step 3.12: reload ufw firewall
 
