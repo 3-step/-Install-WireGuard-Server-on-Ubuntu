@@ -84,7 +84,7 @@ step 3.7:start and enble wireguard server
 
 	systemctl start wg-quick@wg0
 	
-	systemctl Enable wg-quick@wg0
+	systemctl enable wg-quick@wg0
 	
 step 3.8:make sure wireguard vpn server is running
 
