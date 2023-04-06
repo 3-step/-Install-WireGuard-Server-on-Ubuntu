@@ -80,7 +80,7 @@ step 3.6:change permission on the privatekey and wg0.cong file
 	
 	chmod 600 wg0.conf
 	
-step 3.7:start and enble wireguard server
+step 3.7:start and enable wireguard server
 
 	systemctl start wg-quick@wg0
 	
